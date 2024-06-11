@@ -66,40 +66,7 @@ The following dependencies are required for the projects:
    npm install
    ```
 
-4. Install tailwind css and initialize the tailwind configuration file as follows:
-
-- Install tailwindcss and its peer dependencies,then generate your tailwind.config.js and postcss.config.js files.
-
-  ```bash
-    npm install -D tailwindcss postcss autoprefixer
-    npx tailwindcss init -p
-  ```
-
-- Add the paths to all of your template files in your tailwind.config.js file.
-
-  ```bash
-    /** @type {import('tailwindcss').Config} */
-    export default {
-    content: [
-      "./index.html",
-      "./src/**/*.{js,ts,jsx,tsx}",
-    ],
-    theme: {
-      extend: {},
-    },
-    plugins: [],
-    }
-  ```
-
-- In the file index.css, include the followig code to add tailwindcss to your directives:
-
-  ```bash
-    @tailwind base;
-    @tailwind components;
-    @tailwind utilities;
-  ```
-
-5. Make sure that prettier and ESlint have been added as extensions in the code editor.
+4. Make sure that prettier and ESlint have been added as extensions in the code editor.
 
 # Usage
 
