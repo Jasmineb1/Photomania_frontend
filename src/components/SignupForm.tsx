@@ -76,7 +76,7 @@ const SignupForm = () => {
             </button>
             <div className="my-4 flex justify-center">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-lilac md:h-20 md:w-20">
-                <img className="h-10 w-16" src="favicon1.png" alt="logo" />
+                <img className="h-10 w-16" src="photomania.png" alt="logo" />
               </div>
             </div>
             <div className="flex justify-center">
