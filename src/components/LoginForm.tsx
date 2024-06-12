@@ -51,6 +51,7 @@ const SignupForm = () => {
     onSuccess: (data) => {
       if (data.status === 'error') {
         setResponseError(data);
+        console.warn(responseError);
       } else {
         setResponseError(null);
         console.warn(data);
