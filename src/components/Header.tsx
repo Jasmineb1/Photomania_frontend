@@ -1,8 +1,8 @@
 import { useModal } from '../context/ModalContext';
 import { useNav } from '../context/NavContext';
 import { Nav } from '../types';
+import SignupModal from './Modal';
 import SignupForm from './SignupForm';
-import SignupModal from './SignupModal';
 
 const Header = () => {
   const { modal, setModal } = useModal();
@@ -27,19 +27,19 @@ const Header = () => {
   //   setModal(false); // Close modal
   // };
   return (
-    <div className="mx-20 flex items-center justify-between p-3">
-      <div className="flex items-center">
+    <div className="bg-lilac flex h-20 items-center justify-between p-3">
+      <div className="mx-20 flex items-center">
         <button
           type="button"
           name="button"
           onClick={onHomeClick}
-          className={`text-dark hover:bg-light ${nav == Nav.Home ? 'bg-dark text-light hover:text-dark' : ''} w-min rounded-full px-4 py-3 font-semibold`}>
+          className={`text-dark hover:bg-light hover:text-dark ${nav == Nav.Home ? 'bg-purple text-light hover:text-dark' : ''} w-min rounded-full px-4 py-3 font-semibold`}>
           Home
         </button>
         <button
           type="button"
           name="button"
-          className={`text-dark hover:bg-light rounded-full px-5 py-3 font-semibold ${nav === Nav.Create ? 'bg-dark text-light hover:text-dark' : ''} w-min`}
+          className={`rounded-full px-5 py-3 font-semibold text-dark hover:bg-light ${nav === Nav.Create ? 'bg-purple text-light hover:text-dark' : ''} w-min`}
           onClick={onCreateClick}>
           Create
         </button>
@@ -49,11 +49,11 @@ const Header = () => {
           <img src="photomania1.png" alt="photomania logo" className="w-[100px]" />
         </button>
       </div>
-      <div className="flex items-center">
+      <div className="mx-20 flex items-center">
         <button
           type="button"
           name="button"
-          className={`text-dark hover:bg-light rounded-full px-4 py-3 font-semibold ${nav === Nav.Login ? 'bg-dark text-light hover:text-dark' : ''} w-min`}
+          className={`rounded-full px-4 py-3 font-semibold text-dark hover:bg-light ${nav === Nav.Login ? 'bg-purple text-light hover:text-dark' : ''} w-min`}
           onClick={onLoginClick}>
           Login
         </button>
@@ -61,7 +61,7 @@ const Header = () => {
         <button
           type="button"
           name="button"
-          className={`text-dark hover:bg-light rounded-full px-5 py-3 font-semibold ${nav === Nav.Signup ? 'bg-dark text-light hover:text-dark' : ''}`}
+          className={`font-poppins rounded-full px-5 py-3 font-semibold text-dark hover:bg-light ${nav === Nav.Signup ? 'bg-purple text-light hover:text-dark' : ''}`}
           onClick={onSignupClick}>
           Sign Up
         </button>
