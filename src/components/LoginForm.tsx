@@ -1,25 +1,27 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { X } from 'lucide-react';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z, ZodType } from 'zod';
 
+import { useLogin } from '../context/LoginContext';
 import { useModal } from '../context/ModalContext';
-import { useNav } from '../context/NavContext';
-import { Nav, Users } from '../types';
-
+import { LoginUser } from '../types';
 const SignupForm = () => {
-  const { setSignupModal, setLoginModal } = useModal();
-  const { setNav } = useNav();
+  const { setLoginModal, setSignupModal } = useModal();
+  const { setLogin } = useLogin();
+  const [responseError, setResponseError] = useState(null);
   const onCloseClick = () => {
-    setSignupModal(false);
+    setLoginModal(false);
+  };
+  const onSignupClick = () => {
+    setLoginModal(false);
+    setSignupModal(true);
   };
 
-  const schema: ZodType<Users> = z.object({
-    username: z
-      .string({ message: 'Username must be a string' })
-      .min(4, { message: 'Username must contain atleast 4 characters' }),
+  const schema: ZodType<LoginUser> = z.object({
     email: z
       .string()
       .min(1, { message: 'Fields cannot be empty' })
@@ -30,39 +32,45 @@ const SignupForm = () => {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<Users>({
+  } = useForm<LoginUser>({
     resolver: zodResolver(schema)
   });
 
   const { mutate } = useMutation({
-    mutationFn: (data: Users) => {
-      return fetch('http://localhost:5000/register', {
+    mutationFn: (data: LoginUser) => {
+      return fetch('http://localhost:5000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
+      }).then((res) => {
+        return res.json();
       });
     },
     onSuccess: (data) => {
-      setSignupModal(false);
-      setLoginModal(true);
+      if (data.status === 'error') {
+        setResponseError(data);
+      } else {
+        setResponseError(null);
+        console.warn(data);
+        console.warn(data.token);
+        document.cookie = `token=${data.token} path=/;`;
+      }
+      toast.success('Logged in successfully!');
+      setLoginModal(false);
+      setLogin(true);
       console.warn(data);
-      toast.success('Registered Successfully!');
     },
     onError: (error) => {
       console.warn(error);
+      return <p>An error occured</p>;
     }
   });
 
-  const submitData: SubmitHandler<Users> = (data) => {
+  const submitData: SubmitHandler<LoginUser> = (data) => {
     mutate(data);
     //console.warn(data.email);
-  };
-  const onLoginClick = () => {
-    setNav(Nav.Login);
-    setSignupModal(false);
-    setLoginModal(true);
   };
   return (
     <>
@@ -88,24 +96,9 @@ const SignupForm = () => {
             </div>
             <div className="space-y-4 p-6 sm:p-8 md:space-y-6">
               <h1 className="text-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                Create an account
+                Login
               </h1>
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(submitData)}>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                    Username
-                  </label>
-                  <input
-                    type="text"
-                    id="username"
-                    className="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                    placeholder="Username"
-                    {...register('username')}
-                  />
-                  {errors.username && (
-                    <span className="text-red-900">{errors.username.message}</span>
-                  )}
-                </div>
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                     Your email
@@ -138,15 +131,15 @@ const SignupForm = () => {
                 <button
                   type="submit"
                   className="hover:bg-primary-700 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 w-full rounded-lg bg-purple px-5 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4">
-                  Create an account
+                  Login
                 </button>
                 <p className="font-poppins text-sm font-light text-gray-500 dark:text-gray-400">
-                  Already have an account?{' '}
+                  Don't have an account?{' '}
                   <a
                     href="#"
-                    onClick={onLoginClick}
+                    onClick={onSignupClick}
                     className="text-primary-600 dark:text-primary-500 font-medium hover:underline">
-                    Login here
+                    Sign Up here
                   </a>
                 </p>
               </form>
