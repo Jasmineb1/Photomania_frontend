@@ -3,15 +3,19 @@ import { useMutation } from '@tanstack/react-query';
 import { X } from 'lucide-react';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { z, ZodType } from 'zod';
 
 import { useLogin } from '../context/LoginContext';
 import { useModal } from '../context/ModalContext';
-import { LoginUser } from '../types';
+import { useNav } from '../context/NavContext';
+import { LoginUser, Nav } from '../types';
 const SignupForm = () => {
   const { setLoginModal, setSignupModal } = useModal();
   const { setLogin } = useLogin();
+  const { nav } = useNav();
+  const navigate = useNavigate();
   const [responseError, setResponseError] = useState(null);
   const onCloseClick = () => {
     setLoginModal(false);
@@ -57,6 +61,7 @@ const SignupForm = () => {
         console.warn(data);
         console.warn(data.token);
         document.cookie = `token=${data.token} path=/;`;
+        nav === Nav.Create ? navigate('/post/create') : '';
       }
       toast.success('Logged in successfully!');
       setLoginModal(false);

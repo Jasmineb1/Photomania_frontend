@@ -1,3 +1,6 @@
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+
 import { useLogin } from '../context/LoginContext';
 import { useModal } from '../context/ModalContext';
 import { useNav } from '../context/NavContext';
@@ -9,13 +12,17 @@ import SignupForm from './SignupForm';
 const Header = () => {
   const { loginModal, setLoginModal, signupModal, setSignupModal } = useModal();
   const { login, setLogin } = useLogin();
-
   const { nav, setNav } = useNav();
+  const navigate = useNavigate();
+
   const onHomeClick = () => {
     setNav(Nav.Home);
   };
   const onCreateClick = () => {
     setNav(Nav.Create);
+    login
+      ? (setLoginModal(false), toast.error('Please login to create post'), navigate('/post/create'))
+      : setLoginModal(true);
   };
 
   const onLoginClick = () => {
@@ -26,9 +33,10 @@ const Header = () => {
   const onProfileClick = () => {
     setNav(Nav.Profile);
   };
-  const onLogoutClick = () => {
+  const onLogoutClick = async () => {
     setNav(Nav.Logout);
     setLogin(false);
+
     document.cookie = 'token=; expires=Thu, 01 Jan 2000 00:00:00 UTC; path=/;';
     sessionStorage.removeItem('token');
     console.warn('logout successful');
@@ -50,6 +58,7 @@ const Header = () => {
           className={`text-dark hover:bg-light hover:text-dark ${nav == Nav.Home ? 'bg-purple text-light hover:text-dark' : ''} w-min rounded-full px-4 py-3 font-semibold`}>
           Home
         </button>
+
         <button
           type="button"
           name="button"

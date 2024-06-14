@@ -3,6 +3,7 @@ import React, { createContext, ReactNode, useState } from 'react';
 interface LoginContextValue {
   login: boolean;
   setLogin: React.Dispatch<React.SetStateAction<boolean>>;
+  logout: () => void;
 }
 // Create the context with an initial value
 const LoginContext = createContext<LoginContextValue | undefined>(undefined);
@@ -11,7 +12,10 @@ interface LoginContextProviderProps {
 }
 function LoginContextProvider({ children }: LoginContextProviderProps) {
   const [login, setLogin] = useState<boolean>(false);
-  const value = { login, setLogin };
+  const logout = () => {
+    setLogin(false);
+  };
+  const value = { login, setLogin, logout };
   return <LoginContext.Provider value={value}>{children}</LoginContext.Provider>;
 }
 function useLogin() {
