@@ -4,9 +4,12 @@ import Cookies from 'js-cookie';
 import { CloudUpload } from 'lucide-react';
 import { ChangeEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { useNav } from '../context/NavContext';
+import { Nav } from '../types';
 import Header from './Header';
 
 const CreatePost = () => {
@@ -20,6 +23,10 @@ const CreatePost = () => {
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [uploaded, setUploaded] = useState<boolean>(false);
+  const { setNav } = useNav();
+
+  const navigate = useNavigate();
   const token = Cookies.get('token');
   const {
     register,
@@ -54,6 +61,8 @@ const CreatePost = () => {
       }
     },
     onSuccess: () => {
+      console.warn('Post added');
+      setUploaded(true);
       toast.success('Post added successfully');
     },
     onError: (error) => {
@@ -65,6 +74,8 @@ const CreatePost = () => {
   const submitData = (data: PostData) => {
     console.warn('Button clicked!', data);
     mutate(data);
+    // console.warn(uploaded);
+    uploaded ? (navigate('/'), setNav(Nav.Home)) : '';
   };
 
   const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
