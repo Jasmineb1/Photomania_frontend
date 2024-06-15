@@ -3,41 +3,32 @@ import { useMutation } from '@tanstack/react-query';
 import { X } from 'lucide-react';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { z, ZodType } from 'zod';
 
 import { useLogin } from '../context/LoginContext';
 import { useModal } from '../context/ModalContext';
-import { useNav } from '../context/NavContext';
-import { LoginUser, Nav } from '../types';
-const SignupForm = () => {
-  const { setLoginModal, setSignupModal } = useModal();
+import { loginSchema } from '../schema/zodSchema';
+import { LoginUser } from '../types';
+const LoginForm = () => {
+  const { setModal } = useModal();
   const { setLogin } = useLogin();
-  const { nav } = useNav();
+  const location = useLocation();
   const navigate = useNavigate();
   const [responseError, setResponseError] = useState(null);
   const onCloseClick = () => {
-    setLoginModal(false);
+    setModal(null);
   };
   const onSignupClick = () => {
-    setLoginModal(false);
-    setSignupModal(true);
+    setModal('signup');
   };
 
-  const schema: ZodType<LoginUser> = z.object({
-    email: z
-      .string()
-      .min(1, { message: 'Fields cannot be empty' })
-      .email({ message: 'Email not valid' }),
-    password: z.string().min(6, { message: 'Password must be atleast 6 characters' }).max(15)
-  });
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm<LoginUser>({
-    resolver: zodResolver(schema)
+    resolver: zodResolver(loginSchema)
   });
 
   const { mutate } = useMutation({
@@ -54,17 +45,25 @@ const SignupForm = () => {
     },
     onSuccess: (data) => {
       if (data.status === 'error') {
-        setResponseError(data);
+        setResponseError(data.message);
         console.warn(responseError);
       } else {
         setResponseError(null);
         console.warn(data);
         console.warn(data.token);
-        document.cookie = `token=${data.token} path=/;`;
-        nav === Nav.Create ? navigate('/post/create') : '';
+        document.cookie = `token=${data.token}; path=/;`;
+        console.warn('Token:', document.cookie);
       }
+
+      const state = location.state;
+      if (state != null) {
+        state.from === '/post/create' ? navigate('/post/create') : '';
+      }
+
+      //navigate('/');
+      console.warn('login successful', data);
       toast.success('Logged in successfully!');
-      setLoginModal(false);
+      setModal('login');
       setLogin(true);
       console.warn(data);
     },
@@ -76,11 +75,11 @@ const SignupForm = () => {
 
   const submitData: SubmitHandler<LoginUser> = (data) => {
     mutate(data);
-    //console.warn(data.email);
+    console.warn(data.email);
   };
   return (
     <>
-      <section className="bg-white-50 mx-50 my-0 backdrop-blur-lg dark:bg-gray-900">
+      <section className="bg-black-50 mx-50 my-0 w-screen dark:bg-gray-900">
         <div className="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0">
           <div className="relative w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:p-0 dark:border dark:border-gray-700 dark:bg-gray-800">
             <button
@@ -157,4 +156,4 @@ const SignupForm = () => {
   );
 };
 
-export default SignupForm;
+export default LoginForm;

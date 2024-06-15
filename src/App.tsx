@@ -1,11 +1,11 @@
 import { Toaster } from 'sonner';
 
-import Header from './components/Header';
+import GetPost from './components/GetPost';
 
 function App() {
   return (
     <>
-      <Header />
+      <GetPost />
       <Toaster />
     </>
   );

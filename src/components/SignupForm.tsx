@@ -3,35 +3,24 @@ import { useMutation } from '@tanstack/react-query';
 import { X } from 'lucide-react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { z, ZodType } from 'zod';
 
 import { useModal } from '../context/ModalContext';
-import { useNav } from '../context/NavContext';
-import { Nav, Users } from '../types';
+import { signupSchema } from '../schema/zodSchema';
+import { Users } from '../types';
 
 const SignupForm = () => {
-  const { setSignupModal, setLoginModal } = useModal();
-  const { setNav } = useNav();
+  const { setModal } = useModal();
+
   const onCloseClick = () => {
-    setSignupModal(false);
+    setModal(null);
   };
 
-  const schema: ZodType<Users> = z.object({
-    username: z
-      .string({ message: 'Username must be a string' })
-      .min(4, { message: 'Username must contain atleast 4 characters' }),
-    email: z
-      .string()
-      .min(1, { message: 'Fields cannot be empty' })
-      .email({ message: 'Email not valid' }),
-    password: z.string().min(6, { message: 'Password must be atleast 6 characters' }).max(15)
-  });
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm<Users>({
-    resolver: zodResolver(schema)
+    resolver: zodResolver(signupSchema)
   });
 
   const { mutate } = useMutation({
@@ -45,8 +34,8 @@ const SignupForm = () => {
       });
     },
     onSuccess: (data) => {
-      setSignupModal(false);
-      setLoginModal(true);
+      setModal('login');
+
       console.warn(data);
       toast.success('Registered Successfully!');
     },
@@ -57,16 +46,13 @@ const SignupForm = () => {
 
   const submitData: SubmitHandler<Users> = (data) => {
     mutate(data);
-    //console.warn(data.email);
   };
   const onLoginClick = () => {
-    setNav(Nav.Login);
-    setSignupModal(false);
-    setLoginModal(true);
+    setModal('login');
   };
   return (
     <>
-      <section className="bg-white-50 mx-50 my-0 backdrop-blur-lg dark:bg-gray-900">
+      <section className="bg-white-50 mx-50 my-0 w-screen dark:bg-gray-900">
         <div className="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0">
           <div className="relative w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:p-0 dark:border dark:border-gray-700 dark:bg-gray-800">
             <button

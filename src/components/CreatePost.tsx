@@ -6,25 +6,13 @@ import { ChangeEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { z } from 'zod';
 
-import { useNav } from '../context/NavContext';
-import { Nav } from '../types';
-import Header from './Header';
+import { PostData, postSchema } from '../schema/zodSchema';
 
 const CreatePost = () => {
-  const schema = z.object({
-    image: z.instanceof(File, { message: 'Image is required and must be a file' }).optional(),
-    caption: z.string().min(1, 'The caption cannot be empty'),
-    description: z.string().min(1, 'The description cannot be empty')
-  });
-
-  type PostData = z.infer<typeof schema>;
-
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [uploaded, setUploaded] = useState<boolean>(false);
-  const { setNav } = useNav();
 
   const navigate = useNavigate();
   const token = Cookies.get('token');
@@ -34,7 +22,7 @@ const CreatePost = () => {
     setValue,
     formState: { errors }
   } = useForm<PostData>({
-    resolver: zodResolver(schema)
+    resolver: zodResolver(postSchema)
   });
 
   const { mutate } = useMutation({
@@ -43,8 +31,8 @@ const CreatePost = () => {
       if (file) {
         formData.append('image', file);
       }
-      formData.append('caption', data.caption);
-      formData.append('description', data.description);
+      formData.append('postCaption', data.caption);
+      formData.append('postDesc', data.description);
 
       const response = await fetch('http://localhost:5000/post', {
         method: 'POST',
@@ -75,7 +63,7 @@ const CreatePost = () => {
     console.warn('Button clicked!', data);
     mutate(data);
     // console.warn(uploaded);
-    uploaded ? (navigate('/'), setNav(Nav.Home)) : '';
+    uploaded ? navigate('/') : '';
   };
 
   const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -94,8 +82,6 @@ const CreatePost = () => {
 
   return (
     <>
-      <Header />
-
       <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(submitData)}>
         <div className="fixed left-0 right-0 m-auto grid h-screen grid-cols-2 gap-0">
           {/* First Column */}

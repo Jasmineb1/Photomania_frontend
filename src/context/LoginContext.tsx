@@ -21,7 +21,7 @@ function LoginContextProvider({ children }: LoginContextProviderProps) {
 function useLogin() {
   const context = React.useContext(LoginContext);
   if (context === undefined) {
-    throw new Error('useCount must be used within a CountProvider');
+    throw new Error('useLogin must be used within a LoginProvider');
   }
   return context;
 }

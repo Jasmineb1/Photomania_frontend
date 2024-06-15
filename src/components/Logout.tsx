@@ -5,7 +5,7 @@ import { useLogin } from '../context/LoginContext';
 
 const LogOut = () => {
   const { logout } = useLogin();
-  //   const [enabled] = useState(false);
+
   const token = document.cookie;
   const { error } = useQuery({
     // enabled: enabled,
@@ -20,7 +20,7 @@ const LogOut = () => {
         if (res.ok) {
           logout();
           toast.success('Logout Sucessful');
-          //   setEnabled(false);
+
           document.cookie = 'token=; expires=Thu, 01 Jan 2000 00:00:00 UTC; path=/;';
           sessionStorage.removeItem('token');
           console.warn('logout successful');
