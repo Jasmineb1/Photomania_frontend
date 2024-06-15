@@ -7,20 +7,24 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import App from './App.tsx';
 import CreatePost from './components/CreatePost.tsx';
+import Header from './components/Layout.tsx';
 import { LoginContextProvider } from './context/LoginContext.tsx';
 import { ModalContextProvider } from './context/ModalContext.tsx';
-import { NavContextProvider } from './context/NavContext.tsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />
-    // errorElement: <NotFound />
-  },
-  {
-    path: '/post/create',
-    element: <CreatePost />
-    // errorElement: <NotFound />
+    element: <Header />,
+    children: [
+      {
+        path: '/',
+        element: <App />
+      },
+      {
+        path: '/post/create',
+        element: <CreatePost />
+      }
+    ]
   }
 ]);
 const queryClient = new QueryClient();
@@ -28,11 +32,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <LoginContextProvider>
       <ModalContextProvider>
-        <NavContextProvider>
-          <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router}></RouterProvider>
-          </QueryClientProvider>
-        </NavContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router}></RouterProvider>
+        </QueryClientProvider>
       </ModalContextProvider>
     </LoginContextProvider>
   </React.StrictMode>

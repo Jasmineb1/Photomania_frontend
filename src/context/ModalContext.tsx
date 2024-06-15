@@ -1,10 +1,8 @@
 import React, { createContext, ReactNode, useState } from 'react';
-
+type modalType = 'login' | 'signup' | null;
 interface ModalContextValue {
-  loginModal: boolean;
-  signupModal: boolean;
-  setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setSignupModal: React.Dispatch<React.SetStateAction<boolean>>;
+  modal: modalType;
+  setModal: React.Dispatch<React.SetStateAction<modalType>>;
 }
 // Create the context with an initial value
 const ModalContext = createContext<ModalContextValue | undefined>(undefined);
@@ -12,15 +10,15 @@ interface ModalContextProviderProps {
   children: ReactNode;
 }
 function ModalContextProvider({ children }: ModalContextProviderProps) {
-  const [loginModal, setLoginModal] = useState<boolean>(false);
-  const [signupModal, setSignupModal] = useState<boolean>(false);
-  const value = { loginModal, setLoginModal, signupModal, setSignupModal };
+  const [modal, setModal] = useState<modalType>(null);
+
+  const value = { modal, setModal };
   return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>;
 }
 function useModal() {
   const context = React.useContext(ModalContext);
   if (context === undefined) {
-    throw new Error('useCount must be used within a CountProvider');
+    throw new Error('useModal must be used within a ModalProvider');
   }
   return context;
 }
