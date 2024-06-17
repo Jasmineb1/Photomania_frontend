@@ -34,7 +34,7 @@ const GetPost = () => {
           {data &&
             posts.map((post) => (
               <div className="break-inside-avoid overflow-hidden rounded-lg border-2 border-gray-300">
-                <NavLink to="/post/view/">
+                <NavLink to={`post/view/${post.postId}`}>
                   <img
                     className="w-full object-cover"
                     src={`http://localhost:5000/${post.postImg.replace('public\\images\\', 'images/')}`}
