@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { useLogin } from '../context/LoginContext';
 import { useModal } from '../context/ModalContext';
@@ -8,16 +8,12 @@ import SignupForm from './SignupForm';
 
 const Header = () => {
   const location = useLocation();
-  console.warn('Location: ', location);
-  console.warn('Pathname:', location.pathname);
+
   const { modal, setModal } = useModal();
   const { login, setLogin } = useLogin();
 
   const navigate = useNavigate();
 
-  const onHomeClick = () => {
-    navigate('/');
-  };
   const onCreateClick = () => {
     if (!login) {
       setModal('login');
@@ -46,13 +42,14 @@ const Header = () => {
     <div>
       <div className="flex h-20 flex-wrap items-center justify-between bg-lilac p-3 sm:px-2 sm:py-1">
         <div className="flex items-center space-x-2">
-          <button
-            type="button"
-            name="button"
-            onClick={onHomeClick}
-            className={`text-dark hover:bg-light hover:text-dark ${location.pathname === '/' ? 'bg-purple text-light hover:text-dark' : ''} rounded-full px-4 py-3 font-semibold`}>
-            Home
-          </button>
+          <NavLink to="/">
+            <button
+              type="button"
+              name="button"
+              className={`text-dark hover:bg-light hover:text-dark ${location.pathname === '/' ? 'bg-purple text-light hover:text-dark' : ''} rounded-full px-4 py-3 font-semibold`}>
+              Home
+            </button>
+          </NavLink>
           <button
             type="button"
             name="button"

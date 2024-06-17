@@ -16,7 +16,9 @@
     "lucide-react": "^0.394.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-infinite-scroll-hook": "^4.1.1",
     "react-router-dom": "^6.23.1",
+    "react-spinners": "^0.13.8",
     "sonner": "^1.5.0",
     "zod": "^3.23.8"
   },

@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { X } from 'lucide-react';
-import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -15,7 +14,7 @@ const LoginForm = () => {
   const { setLogin } = useLogin();
   const location = useLocation();
   const navigate = useNavigate();
-  const [responseError, setResponseError] = useState(null);
+
   const onCloseClick = () => {
     setModal(null);
   };
@@ -45,31 +44,21 @@ const LoginForm = () => {
     },
     onSuccess: (data) => {
       if (data.status === 'error') {
-        setResponseError(data.message);
-        console.warn(responseError);
+        toast.error('Login Unsuccessful!');
       } else {
-        setResponseError(null);
-        console.warn(data);
-        console.warn(data.token);
         document.cookie = `token=${data.token}; path=/;`;
-        console.warn('Token:', document.cookie);
+        toast.success('Logged in successfully!');
+        setModal(null);
+        setLogin(true);
       }
 
       const state = location.state;
       if (state != null) {
         state.from === '/post/create' ? navigate('/post/create') : '';
       }
-
-      //navigate('/');
-      console.warn('login successful', data);
-      toast.success('Logged in successfully!');
-      setModal('login');
-      setLogin(true);
-      console.warn(data);
     },
-    onError: (error) => {
-      console.warn(error);
-      return <p>An error occured</p>;
+    onError: () => {
+      toast.error('Error in uploading the post!');
     }
   });
 
