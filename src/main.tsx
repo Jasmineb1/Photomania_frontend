@@ -26,7 +26,7 @@ const router = createBrowserRouter([
         element: <CreatePost />
       },
       {
-        path: '/post/view',
+        path: '/post/view/:postId',
         element: <SinglePost />
       }
     ]
