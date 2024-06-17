@@ -33,14 +33,12 @@ const SignupForm = () => {
         body: JSON.stringify(data)
       });
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       setModal('login');
-
-      console.warn(data);
       toast.success('Registered Successfully!');
     },
-    onError: (error) => {
-      console.warn(error);
+    onError: () => {
+      toast.error('Registration unsuccessful');
     }
   });
 

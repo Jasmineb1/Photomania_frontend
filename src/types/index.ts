@@ -1,6 +1,10 @@
 export interface FetchResults {
-  messag: string;
-  postDetails: Posts[];
+  message: string;
+  // postDetails: Posts[];
+  posts: Posts[];
+  totalPages: number;
+  currentPage: number;
+  data: [];
 }
 export interface Posts {
   postId: number;
@@ -10,6 +14,9 @@ export interface Posts {
   postDesc: string;
   postedAt: Date;
   updatedAt: Date;
+  postImgWidth: number;
+  postImgHeight: number;
+  nextPage: number | null;
 }
 
 export interface Users {

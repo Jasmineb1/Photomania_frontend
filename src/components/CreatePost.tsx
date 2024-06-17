@@ -12,7 +12,6 @@ import { PostData, postSchema } from '../schema/zodSchema';
 const CreatePost = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [uploaded, setUploaded] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const token = Cookies.get('token');
@@ -50,20 +49,17 @@ const CreatePost = () => {
     },
     onSuccess: () => {
       console.warn('Post added');
-      setUploaded(true);
+      navigate('/');
+
       toast.success('Post added successfully');
     },
-    onError: (error) => {
+    onError: () => {
       toast.error('An error occurred');
-      console.warn(error);
     }
   });
 
   const submitData = (data: PostData) => {
-    console.warn('Button clicked!', data);
     mutate(data);
-    // console.warn(uploaded);
-    uploaded ? navigate('/') : '';
   };
 
   const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {

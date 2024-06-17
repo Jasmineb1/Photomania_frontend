@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App.tsx';
 import CreatePost from './components/CreatePost.tsx';
 import Header from './components/Layout.tsx';
+import SinglePost from './components/SinglePost.tsx';
 import { LoginContextProvider } from './context/LoginContext.tsx';
 import { ModalContextProvider } from './context/ModalContext.tsx';
 
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: '/post/create',
         element: <CreatePost />
+      },
+      {
+        path: '/post/view',
+        element: <SinglePost />
       }
     ]
   }

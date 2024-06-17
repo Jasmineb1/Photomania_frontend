@@ -1,42 +1,60 @@
+import useInfiniteScroll from 'react-infinite-scroll-hook';
+import { NavLink } from 'react-router-dom';
+
 import { useModal } from '../context/ModalContext';
 import { usePostsQuery } from '../query/queries';
+import Loader from './Loader';
 
 const GetPost = () => {
-  const { loginModal, signupModal } = useModal();
-  const { isLoading, error, data } = usePostsQuery();
-  // const { isLoading, error, data } = useQuery<FetchResults>({
-  //   queryKey: ['posts'],
-  //   queryFn: async () => {
-  //     const response = await fetch('http://localhost:5000/posts');
-  //     return response.json();
-  //   }
-  // });
+  const { modal } = useModal();
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>An error has occurred: {}</div>;
-  const image = data?.postDetails;
-  console.warn('The image url: ', image);
-  const postDetail = data?.postDetails;
-  console.warn('post detail', postDetail);
-
+  const { data, error, fetchNextPage, hasNextPage, isFetching, isLoading } = usePostsQuery();
+  console.warn(data);
+  const [infiniteRef] = useInfiniteScroll({
+    loading: isLoading,
+    hasNextPage: hasNextPage,
+    onLoadMore: fetchNextPage,
+    rootMargin: '0px 0px 400px 0px'
+  });
+  if (isLoading) return <Loader />;
+  if (error) return <div>An error has occurred: {error.message}</div>;
+  if (isFetching) return <Loader />;
+  if (!data) {
+    return <p>'No data!'</p>;
+  }
+  const posts = data.pages.flatMap((page) => {
+    return page.posts;
+  });
+  console.warn('Posts:', posts);
   return (
     <>
-      {/* <Header /> */}
-      <div className={`w-full ${loginModal || signupModal ? 'fixed' : ''}`}>
-        {data &&
-          data.postDetails.map((post) => (
-            <div key={post.postId}>
-              <h2>Post ID: {post.postId}</h2>
-              <img
-                src={`http://localhost:5000/${post.postImg.replace('public\\images\\', 'images/')}`}
-                alt={post.imageName}
-              />
-              <p>Caption: {post.postCaption}</p>
+      <div className={`${modal === null ? '' : 'fixed'}`}>
+        <h1 className="my-4 text-center text-3xl font-semibold text-purple">Explore</h1>
+        <div className="mx-10 my-10 columns-2 gap-4 space-y-4 md:columns-4">
+          {data &&
+            posts.map((post) => (
+              <div className="break-inside-avoid overflow-hidden rounded-lg border-2 border-gray-300">
+                <NavLink to="/post/view/">
+                  <img
+                    className="w-full object-cover"
+                    src={`http://localhost:5000/${post.postImg.replace('public\\images\\', 'images/')}`}
+                    alt={post.imageName}
+                  />
+                </NavLink>
+                {/* <p>Caption: {post.postCaption}</p>
               <p>Description: {post.postDesc}</p>
               <p>Posted At: {new Date(post.postedAt).toLocaleString()}</p>
-              <p>Updated At: {new Date(post.postedAt).toLocaleString()}</p>
-            </div>
-          ))}
+              <p>Updated At: {new Date(post.postedAt).toLocaleString()}</p> */}
+              </div>
+            ))}
+        </div>
+        {/* {hasNextPage && <div ref={infiniteRef}></div>} */}
+        <button
+          onClick={() => {
+            fetchNextPage();
+          }}>
+          Click to fetct more
+        </button>
       </div>
     </>
   );
