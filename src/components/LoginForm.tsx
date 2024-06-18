@@ -58,7 +58,7 @@ const LoginForm = () => {
       }
     },
     onError: () => {
-      toast.error('Error in uploading the post!');
+      toast.error('Error in login');
     }
   });
 

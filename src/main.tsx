@@ -7,6 +7,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import App from './App.tsx';
 import CreatePost from './components/CreatePost.tsx';
+import EditPost from './components/EditPost.tsx';
 import Header from './components/Layout.tsx';
 import SinglePost from './components/SinglePost.tsx';
 import { LoginContextProvider } from './context/LoginContext.tsx';
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: '/post/create',
         element: <CreatePost />
+      },
+      {
+        path: '/post/edit/:postId',
+        element: <EditPost />
       },
       {
         path: '/post/view/:postId',

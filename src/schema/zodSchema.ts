@@ -15,6 +15,10 @@ export const postSchema = z.object({
   description: z.string().min(1, 'The description cannot be empty').max(50)
 });
 
+export const postUpdateSchema = z.object({
+  caption: z.string().min(1, 'The caption cannot be empty'),
+  description: z.string().min(1, 'The description cannot be empty').max(50)
+});
 export const loginSchema: ZodType<LoginUser> = z.object({
   email: z
     .string()
