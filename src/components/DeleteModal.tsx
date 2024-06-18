@@ -1,4 +1,4 @@
-import { X } from 'lucide-react';
+import { Trash2, X } from 'lucide-react';
 import react from 'react';
 
 import { useModal } from '../context/ModalContext';
@@ -37,6 +37,9 @@ const DeleteModal: react.FC<DeleteModalProps> = ({ postId }) => {
 
               <span className="sr-only">Close modal</span>
             </button>
+            <div className="mb-8 mt-8 flex items-center justify-center">
+              <Trash2 />
+            </div>
 
             <p className="mb-4 text-gray-500 dark:text-gray-300">
               Are you sure you want to delete this item?
@@ -51,7 +54,7 @@ const DeleteModal: react.FC<DeleteModalProps> = ({ postId }) => {
               <button
                 type="submit"
                 onClick={handleDelete}
-                className="rounded-lg bg-red-900 px-3 py-2 text-center text-sm font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800">
+                className="rounded-lg bg-red-600 px-3 py-2 text-center text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800">
                 Yes, delete
               </button>
             </div>
