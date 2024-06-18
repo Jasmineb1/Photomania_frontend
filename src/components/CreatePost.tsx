@@ -52,6 +52,7 @@ const CreatePost = () => {
       navigate('/');
 
       toast.success('Post added successfully');
+      console.warn(toast);
     },
     onError: () => {
       toast.error('An error occurred');

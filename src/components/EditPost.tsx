@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { toast, Toaster } from 'sonner';
+import { toast } from 'sonner';
 
 import { PostData, postUpdateSchema } from '../schema/zodSchema';
 
@@ -75,9 +75,6 @@ const EditPost = () => {
 
   return (
     <>
-      <div>
-        <Toaster />
-      </div>
       <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(submitData)}>
         <div className="fixed left-0 right-0 m-auto grid h-screen grid-cols-2 gap-0">
           {/* First Column */}

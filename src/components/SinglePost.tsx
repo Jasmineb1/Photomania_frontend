@@ -6,11 +6,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Toaster } from 'sonner';
 
+import { useDeleteQuery } from '../query/queries';
 import { JwtPayload } from '../types';
 import Loader from './Loader';
 
 const SinglePost = () => {
   const token = Cookies.get('token');
+  const mutateDeletePost = useDeleteQuery();
   const [dropdown, setDropdown] = useState<boolean>(false);
   const navigate = useNavigate();
   const { postId } = useParams();
@@ -51,6 +53,7 @@ const SinglePost = () => {
   const handleDropdown = () => {
     setDropdown(!dropdown);
   };
+
   const handleEdit = () => {
     navigate(`/post/edit/${post.postId}`, {
       state: {
@@ -61,9 +64,11 @@ const SinglePost = () => {
       }
     });
   };
+  const handleDelete = () => {
+    mutateDeletePost.mutate(post.postId);
+  };
   return (
     <div>
-      <Toaster />
       <div className="flex h-screen items-center justify-center">
         <div className="relative flex max-h-[90vh] w-4/5 flex-row rounded-lg p-4 shadow-lg">
           <div className="absolute right-2 top-0">
@@ -82,7 +87,9 @@ const SinglePost = () => {
                   Edit
                 </button>
 
-                <button className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-200">
+                <button
+                  className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-200"
+                  onClick={handleDelete}>
                   Delete
                 </button>
               </div>
@@ -107,6 +114,7 @@ const SinglePost = () => {
           </div>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };

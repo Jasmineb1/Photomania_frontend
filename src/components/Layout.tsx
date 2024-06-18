@@ -1,4 +1,5 @@
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
 
 import { useLogin } from '../context/LoginContext';
 import { useModal } from '../context/ModalContext';
@@ -105,6 +106,7 @@ const Header = () => {
         )}
       </div>
       <Outlet />
+      <Toaster />
     </div>
   );
 };
