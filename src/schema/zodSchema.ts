@@ -35,7 +35,13 @@ export const signupSchema: ZodType<Users> = z.object({
     .string()
     .min(1, { message: 'Fields cannot be empty' })
     .email({ message: 'Email not valid' }),
-  password: z.string().min(6, { message: 'Password must be atleast 6 characters' }).max(15)
+  password: z.string().min(6, { message: 'Password must be atleast 6 characters' }).max(15),
+  firstName: z
+    .string({ message: 'First name must be a string' })
+    .min(3, { message: 'First name must contain atleast 4 characters' }),
+  lastName: z
+    .string({ message: 'Last name must be a string' })
+    .min(2, { message: 'Last name must contain atleast 4 characters' })
 });
 
 export type PostData = z.infer<typeof postSchema>;
