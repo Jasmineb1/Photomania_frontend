@@ -1,4 +1,3 @@
-import useInfiniteScroll from 'react-infinite-scroll-hook';
 import { NavLink } from 'react-router-dom';
 
 import { useModal } from '../context/ModalContext';
@@ -8,14 +7,14 @@ import Loader from './Loader';
 const GetPost = () => {
   const { modal } = useModal();
 
-  const { data, error, fetchNextPage, hasNextPage, isFetching, isLoading } = usePostsQuery();
+  const { data, error, fetchNextPage, isFetching, isLoading } = usePostsQuery();
   console.warn(data);
-  const [infiniteRef] = useInfiniteScroll({
-    loading: isLoading,
-    hasNextPage: hasNextPage,
-    onLoadMore: fetchNextPage,
-    rootMargin: '0px 0px 400px 0px'
-  });
+  // const [infiniteRef] = useInfiniteScroll({
+  //   loading: isLoading,
+  //   hasNextPage: hasNextPage,
+  //   onLoadMore: fetchNextPage,
+  //   rootMargin: '0px 0px 400px 0px'
+  // });
   if (isLoading) return <Loader />;
   if (error) return <div>An error has occurred: {error.message}</div>;
   if (isFetching) return <Loader />;
