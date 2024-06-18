@@ -6,6 +6,14 @@ export interface FetchResults {
   currentPage: number;
   data: [];
 }
+export interface UserResponse {
+  message: string;
+  userdata: Users;
+}
+export interface UserPost {
+  message: string;
+  userPostdata: Posts[];
+}
 export interface Posts {
   postId: number;
   postImg: string;
