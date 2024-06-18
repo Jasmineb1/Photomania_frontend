@@ -52,7 +52,7 @@ const SignupForm = () => {
     <>
       <section className="bg-white-50 mx-50 my-0 w-screen dark:bg-gray-900">
         <div className="mx-auto flex flex-col items-center justify-center px-4 py-6 lg:py-4">
-          <div className="relative w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:m-10 xl:p-0 dark:border dark:border-gray-700 dark:bg-gray-800">
+          <div className="xl:height relative w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:p-0 dark:border dark:border-gray-700 dark:bg-gray-800">
             <button
               className="... absolute right-0 top-0 m-0 h-12 w-12 text-purple"
               onClick={onCloseClick}>
