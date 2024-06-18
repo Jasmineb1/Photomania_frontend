@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useState } from 'react';
-type modalType = 'login' | 'signup' | 'edit' | null;
+type modalType = 'login' | 'signup' | 'delete' | null;
 interface ModalContextValue {
   modal: modalType;
   setModal: React.Dispatch<React.SetStateAction<modalType>>;

@@ -6,13 +6,16 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Toaster } from 'sonner';
 
-import { useDeleteQuery } from '../query/queries';
+import { useModal } from '../context/ModalContext';
 import { JwtPayload } from '../types';
+import DeleteModal from './DeleteModal';
 import Loader from './Loader';
+import Modal from './Modal';
 
 const SinglePost = () => {
   const token = Cookies.get('token');
-  const mutateDeletePost = useDeleteQuery();
+  // const mutateDeletePost = useDeleteQuery();
+  const { modal, setModal } = useModal();
   const [dropdown, setDropdown] = useState<boolean>(false);
   const navigate = useNavigate();
   const { postId } = useParams();
@@ -65,7 +68,8 @@ const SinglePost = () => {
     });
   };
   const handleDelete = () => {
-    mutateDeletePost.mutate(post.postId);
+    // mutateDeletePost.mutate(post.postId);
+    setModal('delete');
   };
   return (
     <div>
@@ -114,6 +118,11 @@ const SinglePost = () => {
           </div>
         </div>
       </div>
+      {modal === 'delete' && (
+        <Modal>
+          <DeleteModal postId={postId} />
+        </Modal>
+      )}
       <Toaster />
     </div>
   );
