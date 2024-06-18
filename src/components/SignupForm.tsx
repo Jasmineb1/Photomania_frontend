@@ -51,8 +51,8 @@ const SignupForm = () => {
   return (
     <>
       <section className="bg-white-50 mx-50 my-0 w-screen dark:bg-gray-900">
-        <div className="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0">
-          <div className="relative w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:p-0 dark:border dark:border-gray-700 dark:bg-gray-800">
+        <div className="mx-auto flex flex-col items-center justify-center px-4 py-6 lg:py-4">
+          <div className="relative w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:m-10 xl:p-0 dark:border dark:border-gray-700 dark:bg-gray-800">
             <button
               className="... absolute right-0 top-0 m-0 h-12 w-12 text-purple"
               onClick={onCloseClick}>
@@ -89,6 +89,40 @@ const SignupForm = () => {
                   {errors.username && (
                     <span className="text-red-900">{errors.username.message}</span>
                   )}
+                </div>
+                <div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                        First Name
+                      </label>
+                      <input
+                        type="text"
+                        id="firstName"
+                        className="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                        placeholder="First Name"
+                        {...register('firstName')}
+                      />
+                      {errors.firstName && (
+                        <span className="text-red-900">{errors.firstName.message}</span>
+                      )}
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+                        Last Name
+                      </label>
+                      <input
+                        type="text"
+                        id="lastName"
+                        className="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                        placeholder="Last Name"
+                        {...register('lastName')}
+                      />
+                      {errors.lastName && (
+                        <span className="text-red-900">{errors.lastName.message}</span>
+                      )}
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">

@@ -28,7 +28,7 @@ export const useDeleteQuery = () => {
   const token = Cookies.get('token');
   const navigate = useNavigate();
   const mutatePost = useMutation({
-    mutationFn: async (postId) => {
+    mutationFn: async (postId: string) => {
       const response = await fetch(`http://localhost:5000/user/post/${postId}`, {
         method: 'DELETE',
         headers: {
