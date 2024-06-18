@@ -62,12 +62,14 @@ const Header = () => {
 
         {login ? (
           <div className="flex items-center space-x-2">
-            <button
-              type="button"
-              name="button"
-              className={`rounded-full px-4 py-3 font-semibold text-dark hover:bg-light`}>
-              Profile
-            </button>
+            <NavLink to="/profile/me">
+              <button
+                type="button"
+                name="button"
+                className={`rounded-full px-4 py-3 font-semibold text-dark hover:bg-light`}>
+                Profile
+              </button>
+            </NavLink>
             <button
               type="button"
               name="button"

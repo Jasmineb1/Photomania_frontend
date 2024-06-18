@@ -52,13 +52,13 @@ const SignupForm = () => {
     <>
       <section className="bg-white-50 mx-50 my-0 w-screen dark:bg-gray-900">
         <div className="mx-auto flex flex-col items-center justify-center px-4 py-6 lg:py-4">
-          <div className="xl:height relative w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:p-0 dark:border dark:border-gray-700 dark:bg-gray-800">
+          <div className="relative w-full rounded-lg bg-white shadow sm:max-w-md md:mt-0 xl:h-screen xl:p-0 dark:border dark:border-gray-700 dark:bg-gray-800">
             <button
               className="... absolute right-0 top-0 m-0 h-12 w-12 text-purple"
               onClick={onCloseClick}>
               <X />
             </button>
-            <div className="my-4 flex justify-center">
+            <div className="my-2 flex justify-center">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-lilac md:h-20 md:w-20">
                 <img className="h-10 w-16" src="photomania1.png" alt="logo" />
               </div>
@@ -74,7 +74,7 @@ const SignupForm = () => {
               <h1 className="text-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 Create an account
               </h1>
-              <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(submitData)}>
+              <form className="space-y-4 md:space-y-4" onSubmit={handleSubmit(submitData)}>
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                     Username
@@ -132,7 +132,7 @@ const SignupForm = () => {
                     type="email"
                     id="email"
                     className="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                    placeholder="name@company.com"
+                    placeholder="name@email.com"
                     {...register('email')}
                   />
                   {errors.email && <span className="text-red-900">{errors.email.message}</span>}
