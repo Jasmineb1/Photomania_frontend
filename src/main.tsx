@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App.tsx';
 import CreatePost from './components/CreatePost.tsx';
 import EditPost from './components/EditPost.tsx';
+import EditProfile from './components/EditProfile.tsx';
 import Header from './components/Layout.tsx';
 import Profile from './components/Profile.tsx';
 import SinglePost from './components/SinglePost.tsx';
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: '/profile/me',
         element: <Profile />
+      },
+      {
+        path: '/profile/edit/:userId',
+        element: <EditProfile />
       }
     ]
   }

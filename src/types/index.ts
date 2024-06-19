@@ -1,6 +1,6 @@
 export interface FetchResults {
   message: string;
-  // postDetails: Posts[];
+
   posts: Posts[];
   totalPages: number;
   currentPage: number;
@@ -9,6 +9,23 @@ export interface FetchResults {
 export interface UserResponse {
   message: string;
   userdata: Users;
+  id: string;
+}
+
+export interface UserProfile {
+  id: string;
+
+  userImg: string;
+
+  about: string;
+  userdata: Users;
+}
+export interface UserEditResponse {
+  firstName: string;
+  lastName: string;
+  about: string;
+  id: string;
+  userData: Users;
 }
 export interface UserPost {
   message: string;
@@ -33,6 +50,17 @@ export interface Users {
   password: string;
   firstName: string;
   lastName: string;
+  id?: string;
+  userImg?: string;
+  about?: string;
+}
+
+export interface UserDetail {
+  firstName: string;
+  lastName: string;
+  about: string;
+  id: string;
+  userImg: string;
 }
 
 export interface LoginUser {
