@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { useModal } from '../context/ModalContext';
+import { queryClient } from '../main';
 import { userDetailsSchema, userSchema } from '../schema/zodSchema';
 import { UserDetail } from '../types';
 
@@ -51,6 +52,7 @@ const EditProfile = ({ firstName, lastName, about, id }: UserDetail) => {
     },
     onSuccess: () => {
       console.warn('User data updated');
+      queryClient.invalidateQueries({ queryKey: ['user'] });
       toast.success('User data updated successfully');
       setModal(null);
     },

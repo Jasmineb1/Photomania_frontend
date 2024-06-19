@@ -62,6 +62,9 @@ export interface UserDetail {
   id: string;
   userImg: string;
 }
+export interface PhotoDetail {
+  userImg?: File | undefined;
+}
 
 export interface LoginUser {
   email: string;
