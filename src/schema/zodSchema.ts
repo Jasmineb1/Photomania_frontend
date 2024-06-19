@@ -44,4 +44,20 @@ export const signupSchema: ZodType<Users> = z.object({
     .min(2, { message: 'Last name must contain atleast 4 characters' })
 });
 
+export const userDetailsSchema = z.object({
+  firstName: z.string().min(1, 'The firstname cannot be empty'),
+  lastName: z.string().min(1, 'The lastname cannot be empty').max(20),
+  about: z.string().max(30)
+});
+export const userPhotoSchema = z.object({
+  image: z
+    .instanceof(File, { message: 'Image is required and must be a file' })
+    .optional()
+    .refine(
+      (file) => file && acceptedImage.includes(file.type),
+      'Only .jpg, .jpeg, .png and .webp formats are supported.'
+    )
+});
+
 export type PostData = z.infer<typeof postSchema>;
+export type userSchema = z.infer<typeof userDetailsSchema>;

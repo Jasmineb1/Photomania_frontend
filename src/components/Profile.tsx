@@ -2,8 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 
-import { UserResponse } from '../types';
+import { useModal } from '../context/ModalContext';
+import { UserProfile } from '../types';
+import EditProfile from './EditProfile';
 import Loader from './Loader';
+import Modal from './Modal';
 import UserPosts from './UserPosts';
 
 interface DecodedToken extends JwtPayload {
@@ -15,6 +18,8 @@ const Profile = () => {
   let id: string | undefined;
   let decoded: DecodedToken | null = null;
 
+  const { modal, setModal } = useModal();
+
   if (token) {
     decoded = jwtDecode(token);
   }
@@ -22,8 +27,12 @@ const Profile = () => {
   if (decoded) {
     id = decoded.userId;
   }
+  const handleEditClick = () => {
+    // navigate(`/profile/edit/${id}`);
+    setModal('edit');
+  };
 
-  const { isLoading, isError, data, error } = useQuery<UserResponse>({
+  const { isLoading, isError, data, error } = useQuery<UserProfile>({
     queryKey: ['user'],
     queryFn: async () => {
       if (!id) {
@@ -55,6 +64,11 @@ const Profile = () => {
   }
 
   const userData = data.userdata;
+  const userPhoto = userData.userImg || '';
+  const userId: string = userData.id || '';
+
+  // console.log('User data from profile', userData);
+  // console.log('user photo url', userPhoto);
 
   if (!userData) {
     return <div>An error occurred. User data is missing.</div>;
@@ -62,10 +76,26 @@ const Profile = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
+      {modal === 'edit' ? (
+        <Modal>
+          <EditProfile
+            userImg="null"
+            id={userId}
+            firstName={userData.firstName}
+            lastName={userData.lastName}
+            about={userData.about || ''}
+          />
+        </Modal>
+      ) : (
+        ''
+      )}
       <section className="mb-10 flex flex-col items-center">
         <div className="mb-4 flex flex-col items-center">
           <img
-            src="https://via.placeholder.com/150"
+            src={
+              `http://localhost:5000/${userPhoto.replace('public\\images\\', 'images/')}` ||
+              `https://via.placeholder.com/150`
+            }
             alt="User Avatar"
             className="mr-4 h-60 w-60 items-center rounded-full sm:h-40 sm:w-40 md:h-48 md:w-48"
           />
@@ -74,7 +104,9 @@ const Profile = () => {
           </div>
           <p className="text-center text-gray-600">{userData.username}</p>
         </div>
-        <button className="rounded-xl border-2 border-black bg-lilac p-2 hover:border-white hover:bg-purple hover:text-white">
+        <button
+          className="rounded-xl border-2 border-white bg-purple p-2 text-white hover:bg-lilac hover:text-black"
+          onClick={handleEditClick}>
           Edit Profile
         </button>
       </section>
