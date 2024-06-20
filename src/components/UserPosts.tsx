@@ -1,17 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
-import { Loader } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 import { UserPost } from '../types';
+import Loader from './Loader';
 
 interface DecodedToken extends JwtPayload {
   userId: string;
 }
+type UserPostsProps = {
+  userIdParams: string | undefined;
+};
 
-const UserPosts = () => {
+const UserPosts = ({ userIdParams }: UserPostsProps) => {
   const token = Cookies.get('token');
+
   let id: string | undefined;
 
   let decoded: DecodedToken | null = null;
@@ -23,10 +27,26 @@ const UserPosts = () => {
     id = decoded.userId;
   }
 
+  const getUrl = () => {
+    if (userIdParams && id !== userIdParams) {
+      return `http://localhost:5000/user/post/${userIdParams}`;
+    }
+
+    return `http://localhost:5000/user/post/${id}`;
+
+    // let url = '';
+    // if (location.state?.from === '/post/view' && userIdParams) {
+    //   console.log('Mathi ko wala bhayo!!', { userIdParams });
+    //   url = `http://localhost:5000/user/post/${userIdParams}`;
+    // }
+    // console.log('Default bhayiracha', id);
+    // url = `http://localhost:5000/user/post/${id}`;
+    // return url;
+  };
   const { isLoading, isError, data, error } = useQuery<UserPost>({
     queryKey: ['userPosts'],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:5000/user/post/${id}`);
+      const response = await fetch(getUrl());
       if (!response.ok) {
         throw new Error('Failed to fetch posts');
       }
@@ -44,7 +64,7 @@ const UserPosts = () => {
   if (isError) return <div>An error occurred: {error.message}</div>;
 
   if (!data || !data.userPostdata || data.userPostdata.length === 0) {
-    return <div>Failed to fetch details!</div>;
+    return <div>Nothing to show!</div>;
   }
 
   console.warn('UserPost', data);

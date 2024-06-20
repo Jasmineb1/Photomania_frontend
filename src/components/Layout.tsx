@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 
@@ -9,10 +10,13 @@ import SignupForm from './SignupForm';
 
 const Header = () => {
   const location = useLocation();
+  const token = Cookies.get('token');
 
   const { modal, setModal } = useModal();
   const { login, setLogin } = useLogin();
-
+  if (token) {
+    setLogin(true);
+  }
   const navigate = useNavigate();
 
   const onCreateClick = () => {

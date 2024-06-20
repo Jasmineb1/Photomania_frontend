@@ -30,7 +30,7 @@ export const loginSchema: ZodType<LoginUser> = z.object({
 export const signupSchema: ZodType<Users> = z.object({
   username: z
     .string({ message: 'Username must be a string' })
-    .min(4, { message: 'Username must contain atleast 4 characters' }),
+    .min(3, { message: 'Username must contain atleast 4 characters' }),
   email: z
     .string()
     .min(1, { message: 'Fields cannot be empty' })

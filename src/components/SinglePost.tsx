@@ -14,6 +14,7 @@ import Modal from './Modal';
 
 const SinglePost = () => {
   const token = Cookies.get('token');
+  let id: number | string | undefined;
   // const mutateDeletePost = useDeleteQuery();
   const { modal, setModal } = useModal();
   const [dropdown, setDropdown] = useState<boolean>(false);
@@ -47,12 +48,18 @@ const SinglePost = () => {
 
   const post = data.postData;
   const user = post.userRegistration;
+  // console.log('Post data', post);
+  // console.log('User data', user);
+  // console.log('user image:', user.userImg);
 
   let decoded: JwtPayload | null = null;
   if (token) {
     decoded = jwtDecode(token);
   }
 
+  if (decoded) {
+    id = decoded.userId;
+  }
   const handleDropdown = () => {
     setDropdown(!dropdown);
   };
@@ -70,6 +77,12 @@ const SinglePost = () => {
   const handleDelete = () => {
     // mutateDeletePost.mutate(post.postId);
     setModal('delete');
+  };
+  const handleProfileClick = () => {
+    if (id && id == user.id) {
+      navigate(`/profile/me`);
+    }
+    navigate(`/profile/${user.id}`);
   };
   return (
     <div>
@@ -90,7 +103,6 @@ const SinglePost = () => {
                   onClick={handleEdit}>
                   Edit
                 </button>
-
                 <button
                   className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-200"
                   onClick={handleDelete}>
@@ -101,23 +113,50 @@ const SinglePost = () => {
           </div>
 
           <div
-            className={`flex w-full flex-1 items-center justify-center overflow-hidden border-2 border-lightGray ${isLandscape ? 'max-h-[70vh]' : 'max-h-full'}`}>
+            className={`flex w-1/2 flex-1 items-center justify-center overflow-hidden border-2 border-lightGray ${
+              isLandscape ? 'max-h-[70vh]' : 'max-h-full'
+            }`}>
             <img
               className={`rounded-lg object-contain ${isLandscape ? 'max-h-[70vh]' : 'max-h-full'}`}
               src={`http://localhost:5000/${data.postData.postImg.replace('public\\images\\', 'images/')}`}
               alt=""
             />
           </div>
-          <div className="ml-10 mt-4 flex flex-1 flex-col overflow-auto">
-            <div className="mb-2 text-lg font-extrabold">{post.postCaption}</div>
-            <div className="text-md text-gray-500">{post.postCaption}</div>
-            <div className="mb-2 mt-auto rounded-lg border-2 border-gray-300 p-2">
-              <div className="mb-2 text-lg font-semibold">{user.username}</div>
-              <div className="text-md">{user.email}</div>
+
+          <div className="mx-4 mt-4 flex w-1/2 flex-col overflow-auto rounded-lg">
+            <div className="flex items-center border-b p-4">
+              <button onClick={handleProfileClick} className="mr-4">
+                {user.userImg ? (
+                  <img
+                    src={`http://localhost:5000/${user.userImg.replace('public\\images\\', 'images/')}`}
+                    alt="User Avatar"
+                    className="h-12 w-12 rounded-full"
+                  />
+                ) : (
+                  <img
+                    src={'https://via.placeholder.com/150'}
+                    alt="User Avatar"
+                    className="h-12 w-12 rounded-full"
+                  />
+                )}
+              </button>
+              <div className="flex flex-col">
+                <button onClick={handleProfileClick} className="font-semibold">
+                  {user.username}
+                </button>
+                <span className="text-sm text-gray-500">
+                  {new Date(post.postedAt).toLocaleDateString()}
+                </span>
+              </div>
+            </div>
+            <div className="p-4">
+              <div className="mb-2 text-lg font-extrabold">{post.postCaption}</div>
+              <div className="text-md text-gray-500">{post.postCaption}</div>
             </div>
           </div>
         </div>
       </div>
+
       {modal === 'delete' && (
         <Modal>
           <DeleteModal postId={postId} />
