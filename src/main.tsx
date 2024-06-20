@@ -14,6 +14,7 @@ import SinglePost from './components/SinglePost.tsx';
 import { LoginContextProvider } from './context/LoginContext.tsx';
 import { ModalContextProvider } from './context/ModalContext.tsx';
 
+export const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: '/',
@@ -38,11 +39,15 @@ const router = createBrowserRouter([
       {
         path: '/profile/me',
         element: <Profile />
+      },
+      {
+        path: '/profile/:userIdParams',
+        element: <Profile />
       }
     ]
   }
 ]);
-export const queryClient = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <LoginContextProvider>

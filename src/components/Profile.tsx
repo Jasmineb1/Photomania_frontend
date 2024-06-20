@@ -5,6 +5,7 @@ import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Pen } from 'lucide-react';
 import { ChangeEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useModal } from '../context/ModalContext';
@@ -28,10 +29,12 @@ const Profile = () => {
     resolver: zodResolver(userPhotoSchema)
   });
   const token = Cookies.get('token');
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showEditDeleteOptions, setShowEditDeleteOptions] = useState(false);
   let id: string | undefined;
   let decoded: DecodedToken | null = null;
+  let { userIdParams } = useParams<{ userIdParams: string }>();
 
   const { modal, setModal } = useModal();
 
@@ -107,6 +110,14 @@ const Profile = () => {
       userImg: data.image
     });
   };
+  const getUrl = () => {
+    if (userIdParams && id != userIdParams) {
+      return `http://localhost:5000/profile/${userIdParams}`;
+    }
+    userIdParams = undefined;
+
+    return `http://localhost:5000/profile/me/${id}`;
+  };
 
   const { isLoading, isError, data, error } = useQuery<UserProfile>({
     queryKey: ['user'],
@@ -114,7 +125,7 @@ const Profile = () => {
       if (!id) {
         throw new Error('User ID not found');
       }
-      const response = await fetch(`http://localhost:5000/profile/me/${id}`);
+      const response = await fetch(getUrl());
       if (!response.ok) {
         throw new Error('Failed to fetch profile');
       }
@@ -201,7 +212,7 @@ const Profile = () => {
               <div className="absolute bottom-0 right-0 p-2 hover:cursor-pointer">
                 <button
                   onClick={handleEditDeleteOptions}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-300 text-gray-700 hover:bg-gray-400">
+                  className={`${id !== userId ? 'hidden' : 'flex h-10 w-10 items-center justify-center rounded-full bg-gray-300 text-gray-700 hover:bg-gray-400'}`}>
                   <Pen size={18} />
                 </button>
                 {showEditDeleteOptions && (
@@ -231,7 +242,7 @@ const Profile = () => {
                   {userData.firstName} {userData.lastName}
                 </h2>
                 <button
-                  className="rounded-xl border-2 border-white bg-purple p-2 text-white hover:bg-lilac hover:text-black"
+                  className={`${id !== userId ? 'hidden' : 'rounded-xl border-2 border-white bg-purple p-2 text-white hover:bg-lilac hover:text-black'}`}
                   onClick={handleEditClick}>
                   Edit Profile
                 </button>
@@ -244,8 +255,12 @@ const Profile = () => {
           </div>
 
           <div className="mt-6">
-            <h2 className="text-bold text-center text-2xl">My Posts</h2>
-            <UserPosts />
+            <h2 className="text-bold text-center text-2xl">Posts</h2>
+            {userIdParams !== undefined ? (
+              <UserPosts userIdParams={userIdParams} />
+            ) : (
+              <UserPosts userIdParams={undefined} />
+            )}
           </div>
         </section>
       </div>
