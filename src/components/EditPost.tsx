@@ -56,7 +56,7 @@ const EditPost = () => {
   });
   useEffect(() => {
     if (image) {
-      setImagePreview(image);
+      setImagePreview(image.replace('public\\images\\', 'images/'));
     }
     if (caption) {
       setValue('caption', caption);
@@ -70,8 +70,11 @@ const EditPost = () => {
     mutate(data);
   };
   if (sentFrom != '/post/view') {
-    return <div>Not authorized!</div>;
+    return <div className="text-center text-2xl font-bold">Not authorized!</div>;
   }
+  // if (!token) {
+  //   return <div>You are not authorized!</div>;
+  // }
 
   return (
     <>
@@ -84,7 +87,7 @@ const EditPost = () => {
             <div className="col-span-1 flex">
               <label className={`mx-10 flex h-[70%] w-full flex-col items-center`}>
                 <img
-                  src={`http://localhost:5000/${image.replace('public\\images\\', 'images/')}`}
+                  src={`http://localhost:5000/${imagePreview}`}
                   alt="Image Preview"
                   className="w-full overflow-hidden rounded-lg object-cover"
                 />

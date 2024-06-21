@@ -6,7 +6,7 @@ const acceptedImage = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 export const postSchema = z.object({
   image: z
     .instanceof(File, {
-      message: 'Image is required and must be of type .jpg, .jpeg, .png or .webp'
+      message: 'Image is required and must be of type .jpg, .jpeg, .png'
     })
 
     .refine(
@@ -15,14 +15,17 @@ export const postSchema = z.object({
     ),
   caption: z
     .string()
-    .min(1, 'The caption cannot be empty')
-    .max(30, 'Caption can contain at most 30 characters! Please include details in description!'),
-  description: z.string().min(1, 'The description cannot be empty').max(200)
+
+    .max(100, 'Caption can contain at most 100 characters! Please include details in description!'),
+  description: z.string().max(200, 'The description cannot exceed 500 characters!')
 });
 
 export const postUpdateSchema = z.object({
-  caption: z.string().min(1, 'The caption cannot be empty'),
-  description: z.string().min(1, 'The description cannot be empty').max(50)
+  caption: z
+    .string()
+
+    .max(100, 'Caption can contain at most 100 characters! Please include details in description!'),
+  description: z.string().max(200, 'The description cannot be exceed 500 characters!')
 });
 export const loginSchema: ZodType<LoginUser> = z.object({
   email: z

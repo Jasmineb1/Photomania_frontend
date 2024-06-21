@@ -63,7 +63,7 @@ export interface UserDetail {
   userImg: string;
 }
 export interface PhotoDetail {
-  userImg?: File | undefined;
+  userImg?: File | undefined | Blob;
 }
 
 export interface LoginUser {
