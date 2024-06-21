@@ -9,6 +9,7 @@ import App from './App.tsx';
 import CreatePost from './components/CreatePost.tsx';
 import EditPost from './components/EditPost.tsx';
 import Header from './components/Layout.tsx';
+import NotFound from './components/NotFound.tsx';
 import Profile from './components/Profile.tsx';
 import SinglePost from './components/SinglePost.tsx';
 import { LoginContextProvider } from './context/LoginContext.tsx';
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Header />,
+    errorElement: <NotFound />,
     children: [
       {
         path: '/',

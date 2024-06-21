@@ -151,7 +151,7 @@ const SinglePost = () => {
             </div>
             <div className="p-4">
               <div className="mb-2 text-lg font-extrabold">{post.postCaption}</div>
-              <div className="text-md text-gray-500">{post.postDesc}</div>
+              <div className="text-md break-all text-gray-500">{post.postDesc}</div>
             </div>
           </div>
         </div>

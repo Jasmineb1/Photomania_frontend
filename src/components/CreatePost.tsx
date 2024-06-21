@@ -78,6 +78,11 @@ const CreatePost = () => {
       reader.readAsDataURL(selectedFile);
     }
   };
+  if (!token) {
+    return (
+      <div className='className="text-center font-bold" text-2xl'>You are not authorized!</div>
+    );
+  }
 
   return (
     <div>
@@ -85,7 +90,7 @@ const CreatePost = () => {
         Create Post
       </h1>
       <form className="" onSubmit={handleSubmit(submitData)}>
-        <div className="m-auto grid h-screen grid-cols-2 gap-0">
+        <div className="sm-[70%] m-auto grid h-screen grid-cols-2 gap-0">
           <div className="col-span-1 flex">
             <label
               className={`${

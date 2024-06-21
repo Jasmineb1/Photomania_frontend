@@ -3,7 +3,8 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Pen } from 'lucide-react';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
+import AvatarEditor from 'react-avatar-editor';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -32,9 +33,12 @@ const Profile = () => {
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showEditDeleteOptions, setShowEditDeleteOptions] = useState(false);
+  const [isAvatarEditorOpen, setIsAvatarEditorOpen] = useState(false);
+  const avatarEditorRef = useRef<AvatarEditor>(null);
+
   let id: string | undefined;
   let decoded: DecodedToken | null = null;
-  let { userIdParams } = useParams<{ userIdParams: string }>();
+  const { userIdParams } = useParams<{ userIdParams: string }>();
 
   const { modal, setModal } = useModal();
 
@@ -105,11 +109,14 @@ const Profile = () => {
     }
   });
 
-  const submitData = (data: PostData) => {
-    mutatePhoto({
-      userImg: data.image
-    });
+  const submitData = () => {
+    if (selectedFile) {
+      mutatePhoto({
+        userImg: selectedFile
+      });
+    }
   };
+
   const getUrl = () => {
     if (!id) {
       return `http://localhost:5000/profile/${userIdParams}`;
@@ -119,13 +126,11 @@ const Profile = () => {
     }
     return `http://localhost:5000/profile/me/${id}`;
   };
+
   const { isLoading, isError, data, error } = useQuery<UserProfile>({
     queryKey: ['user'],
     queryFn: async () => {
-      // if (!id) {
-      //   throw new Error('User ID not found');
-      // }
-      const response = await fetch(getUrl() || `http://localhost:5000/profile/me/${id}`);
+      const response = await fetch(getUrl());
       if (!response.ok) {
         throw new Error('Failed to fetch profile');
       }
@@ -147,7 +152,9 @@ const Profile = () => {
   }
 
   if (!data) {
-    return <div>An error occurred. No data received.</div>;
+    return (
+      <div className="text-center text-2xl font-bold">An error occurred. No data received.</div>
+    );
   }
 
   const userData = data.userdata;
@@ -155,7 +162,9 @@ const Profile = () => {
   const userId: string = userData.id || '';
 
   if (!userData) {
-    return <div>An error occurred. User data is missing.</div>;
+    return (
+      <div className="text-center text-2xl font-bold">An error occurred. User data is missing.</div>
+    );
   }
 
   const handleEditDeleteOptions = () => {
@@ -166,14 +175,27 @@ const Profile = () => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
-      mutatePhoto({
-        userImg: file
-      });
+      setIsAvatarEditorOpen(true);
     }
   };
 
   const handleDeletePhoto = () => {
     deletePhoto();
+  };
+
+  const handleCrop = () => {
+    if (avatarEditorRef.current) {
+      const canvas = avatarEditorRef.current.getImage();
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const croppedFile = new File([blob], 'cropped.jpg', { type: 'image/jpeg' });
+          mutatePhoto({
+            userImg: croppedFile
+          });
+          setIsAvatarEditorOpen(false);
+        }
+      });
+    }
   };
 
   return (
@@ -188,9 +210,7 @@ const Profile = () => {
             about={userData.about || ''}
           />
         </Modal>
-      ) : (
-        ''
-      )}
+      ) : null}
       <div className="mb-10 ml-20">
         <section className="flex flex-col">
           <div className="items-left mt-10 flex flex-col md:flex-row">
@@ -264,6 +284,34 @@ const Profile = () => {
           </div>
         </section>
       </div>
+
+      {isAvatarEditorOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="rounded-lg bg-white p-4 shadow-lg">
+            <AvatarEditor
+              ref={avatarEditorRef}
+              image={selectedFile}
+              width={250}
+              height={250}
+              borderRadius={150}
+              scale={1.2}
+            />
+            <div className="mt-4 flex justify-between">
+              <button
+                className="rounded bg-red-700 px-4 py-2 text-white hover:bg-red-900"
+                onClick={() => setIsAvatarEditorOpen(false)}>
+                Cancel
+              </button>
+              <button
+                className="rounded bg-purple px-4 py-2 text-white hover:bg-lilac"
+                onClick={handleCrop}
+                disabled={isLoading}>
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
