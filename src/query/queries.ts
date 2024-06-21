@@ -46,7 +46,7 @@ export const useDeleteQuery = () => {
     onSuccess: () => {
       console.warn('Post deleted');
       toast.success('Post deleted successfully');
-      navigate('/');
+      navigate('/profile/me');
       // You may choose to handle navigation in the component where you use this hook
     },
     onError: () => {

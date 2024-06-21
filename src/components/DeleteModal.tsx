@@ -11,7 +11,7 @@ interface DeleteModalProps {
 const DeleteModal: react.FC<DeleteModalProps> = ({ postId }) => {
   const mutateDeletePost = useDeleteQuery();
   const { setModal } = useModal();
-  console.warn('Post id:', postId);
+
   const handleDelete = () => {
     if (postId) {
       mutateDeletePost.mutate(postId);

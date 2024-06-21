@@ -51,7 +51,6 @@ const EditProfile = ({ firstName, lastName, about, id }: UserDetail) => {
       }
     },
     onSuccess: () => {
-      console.warn('User data updated');
       queryClient.invalidateQueries({ queryKey: ['user'] });
       toast.success('User data updated successfully');
       setModal(null);
@@ -104,7 +103,7 @@ const EditProfile = ({ firstName, lastName, about, id }: UserDetail) => {
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   {...register('firstName')}
                 />
-                {errors.firstName && <p>{errors.firstName.message}</p>}
+                {errors.firstName && <p className="text-red-700">{errors.firstName.message}</p>}
               </div>
               <div className="mb-3">
                 <label className="block text-sm font-medium text-gray-700">Last name</label>
@@ -113,14 +112,14 @@ const EditProfile = ({ firstName, lastName, about, id }: UserDetail) => {
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   {...register('lastName')}
                 />
-                {errors.lastName && <p className="mb-2">{errors.lastName.message}</p>}
+                {errors.lastName && <p className="mb-2 text-red-700">{errors.lastName.message}</p>}
               </div>
               <div className="mb-3">
                 <label className="block text-sm font-medium text-gray-700">About</label>
                 <textarea
                   className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   {...register('about')}></textarea>
-                {errors.about && <p>{errors.about.message}</p>}
+                {errors.about && <p className="text-red-700">{errors.about.message}</p>}
               </div>
 
               <button

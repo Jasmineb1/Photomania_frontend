@@ -24,21 +24,40 @@ const SignupForm = () => {
   });
 
   const { mutate } = useMutation({
-    mutationFn: (data: Users) => {
-      return fetch('http://localhost:5000/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
+    mutationFn: async (data: Users) => {
+      try {
+        const response = await fetch('http://localhost:5000/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to register user');
+        }
+
+        return await response.json();
+      } catch (error) {
+        throw new Error(`Failed to register user: ${error}`);
+      }
     },
+
     onSuccess: () => {
       setModal('login');
       toast.success('Registered Successfully!');
     },
-    onError: () => {
-      toast.error('Registration unsuccessful');
+    onError: (error) => {
+      let errorMessage = 'Registration unsuccessful';
+      if (error.message.includes('User already exists')) {
+        errorMessage = 'User email already exists, please use another email!';
+      }
+      if (error.message.includes('Username exists')) {
+        errorMessage = 'Username already exists, please use a new one!';
+      }
+      toast.error(` ${errorMessage}`);
     }
   });
 
@@ -60,7 +79,7 @@ const SignupForm = () => {
             </button>
             <div className="my-2 flex justify-center">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-lilac md:h-20 md:w-20">
-                <img className="h-10 w-16" src="photomania1.png" alt="logo" />
+                <img className="h-10 w-16" src="/public/photomania1.png" alt="logo" />
               </div>
             </div>
             <div className="flex justify-center">
@@ -87,7 +106,7 @@ const SignupForm = () => {
                     {...register('username')}
                   />
                   {errors.username && (
-                    <span className="text-red-900">{errors.username.message}</span>
+                    <span className="text-red-700">{errors.username.message}</span>
                   )}
                 </div>
                 <div>
@@ -104,7 +123,7 @@ const SignupForm = () => {
                         {...register('firstName')}
                       />
                       {errors.firstName && (
-                        <span className="text-red-900">{errors.firstName.message}</span>
+                        <span className="text-red-700">{errors.firstName.message}</span>
                       )}
                     </div>
                     <div>
@@ -119,7 +138,7 @@ const SignupForm = () => {
                         {...register('lastName')}
                       />
                       {errors.lastName && (
-                        <span className="text-red-900">{errors.lastName.message}</span>
+                        <span className="text-red-700">{errors.lastName.message}</span>
                       )}
                     </div>
                   </div>
@@ -135,7 +154,7 @@ const SignupForm = () => {
                     placeholder="name@email.com"
                     {...register('email')}
                   />
-                  {errors.email && <span className="text-red-900">{errors.email.message}</span>}
+                  {errors.email && <span className="text-red-700">{errors.email.message}</span>}
                 </div>
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
@@ -149,7 +168,7 @@ const SignupForm = () => {
                     {...register('password')}
                   />
                   {errors.password && (
-                    <span className="text-red-900">{errors.password.message}</span>
+                    <span className="text-red-700">{errors.password.message}</span>
                   )}
                 </div>
 

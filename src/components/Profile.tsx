@@ -111,27 +111,27 @@ const Profile = () => {
     });
   };
   const getUrl = () => {
-    if (userIdParams && id != userIdParams) {
+    if (!id) {
       return `http://localhost:5000/profile/${userIdParams}`;
     }
-    userIdParams = undefined;
-
+    if (userIdParams && id !== userIdParams) {
+      return `http://localhost:5000/profile/${userIdParams}`;
+    }
     return `http://localhost:5000/profile/me/${id}`;
   };
-
   const { isLoading, isError, data, error } = useQuery<UserProfile>({
     queryKey: ['user'],
     queryFn: async () => {
-      if (!id) {
-        throw new Error('User ID not found');
-      }
-      const response = await fetch(getUrl());
+      // if (!id) {
+      //   throw new Error('User ID not found');
+      // }
+      const response = await fetch(getUrl() || `http://localhost:5000/profile/me/${id}`);
       if (!response.ok) {
         throw new Error('Failed to fetch profile');
       }
       return response.json();
     },
-    enabled: !!id
+    enabled: !!userIdParams || !!id
   });
 
   if (isLoading) {
@@ -237,18 +237,18 @@ const Profile = () => {
             </div>
 
             <div className="md:ml-4">
-              <div className="mt-6 flex items-center justify-center">
-                <h2 className="mr-4 text-center text-2xl font-bold">
+              <div className="mt-6 flex">
+                <h2 className="mr-4 text-left text-2xl font-bold">
                   {userData.firstName} {userData.lastName}
                 </h2>
                 <button
                   className={`${id !== userId ? 'hidden' : 'rounded-xl border-2 border-white bg-purple p-2 text-white hover:bg-lilac hover:text-black'}`}
                   onClick={handleEditClick}>
-                  Edit Profile
+                  <Pen size={18} />
                 </button>
               </div>
               <div className="flex flex-col">
-                <p className="p-2 text-left text-gray-600">{userData.username}</p>
+                <p className="p-2 text-left text-gray-600">@{userData.username}</p>
                 <p className="p-2 text-left text-gray-600">{userData.about}</p>
               </div>
             </div>

@@ -5,14 +5,19 @@ import { LoginUser, Users } from '../types';
 const acceptedImage = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 export const postSchema = z.object({
   image: z
-    .instanceof(File, { message: 'Image is required and must be a file' })
-    .optional()
+    .instanceof(File, {
+      message: 'Image is required and must be of type .jpg, .jpeg, .png or .webp'
+    })
+
     .refine(
       (file) => file && acceptedImage.includes(file.type),
       'Only .jpg, .jpeg, .png and .webp formats are supported.'
     ),
-  caption: z.string().min(1, 'The caption cannot be empty'),
-  description: z.string().min(1, 'The description cannot be empty').max(50)
+  caption: z
+    .string()
+    .min(1, 'The caption cannot be empty')
+    .max(30, 'Caption can contain at most 30 characters! Please include details in description!'),
+  description: z.string().min(1, 'The description cannot be empty').max(200)
 });
 
 export const postUpdateSchema = z.object({
@@ -47,7 +52,7 @@ export const signupSchema: ZodType<Users> = z.object({
 export const userDetailsSchema = z.object({
   firstName: z.string().min(1, 'The firstname cannot be empty'),
   lastName: z.string().min(1, 'The lastname cannot be empty').max(20),
-  about: z.string().max(30)
+  about: z.string().max(100, 'About you in less than 100 characters please!')
 });
 export const userPhotoSchema = z.object({
   image: z

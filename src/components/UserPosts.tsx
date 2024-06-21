@@ -23,7 +23,6 @@ const UserPosts = ({ userIdParams }: UserPostsProps) => {
     decoded = jwtDecode<DecodedToken>(token);
   }
   if (decoded) {
-    console.warn(decoded.userId);
     id = decoded.userId;
   }
 
@@ -67,21 +66,18 @@ const UserPosts = ({ userIdParams }: UserPostsProps) => {
     return <div>Nothing to show!</div>;
   }
 
-  console.warn('UserPost', data);
   const postData = data.userPostdata;
-
-  console.warn('Post data', postData);
 
   return (
     <>
-      <div className="mx-20 mt-10">
-        <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+      <div className="mt-10">
+        <div className="mr-10 grid grid-cols-4 gap-2 md:grid-cols-4">
           {postData &&
             postData.map((post) => (
               <div
                 key={post.postId}
-                className="overflow-hidden rounded-lg border-2 border-gray-300"
-                style={{ maxWidth: '100%', height: 'auto' }}>
+                className="mb-6 overflow-hidden rounded-lg border-2 border-gray-300"
+                style={{ width: '250px', height: '300px ' }}>
                 <NavLink to={`/post/view/${post.postId}`}>
                   <img
                     className="h-full w-full object-cover"
