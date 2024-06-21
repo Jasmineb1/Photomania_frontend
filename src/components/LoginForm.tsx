@@ -31,40 +31,52 @@ const LoginForm = () => {
   });
 
   const { mutate } = useMutation({
-    mutationFn: (data: LoginUser) => {
-      return fetch('http://localhost:5000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      }).then((res) => {
-        return res.json();
-      });
+    mutationFn: async (data: LoginUser) => {
+      try {
+        const response = await fetch('http://localhost:5000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to register user');
+        }
+        return await response.json();
+      } catch (error) {
+        throw new Error(`Failed to register user: ${error}`);
+      }
     },
     onSuccess: (data) => {
-      if (data.status === 'error') {
-        toast.error('Login Unsuccessful!');
-      } else {
-        document.cookie = `token=${data.token}; path=/;`;
-        toast.success('Logged in successfully!');
-        setModal(null);
-        setLogin(true);
+      if (data.message !== 'login successful') {
+        //toast.error(` ${data.message}`);
       }
+      document.cookie = `token=${data.token}; path=/;`;
+      toast.success('Logged in successfully!');
+      setModal(null);
+      setLogin(true);
 
       const state = location.state;
       if (state != null) {
         state.from === '/post/create' ? navigate('/post/create') : '';
       }
     },
-    onError: () => {
-      toast.error('Error in login');
+    onError: (error) => {
+      let errorMessage = 'login unsuccessful';
+      if (error.message.includes('User does not exist')) {
+        errorMessage = 'User does not exist!';
+      }
+      if (error.message.includes('Invalid password!')) {
+        errorMessage = 'Incorrect password!';
+      }
+      toast.error(` ${errorMessage}`);
     }
   });
 
   const submitData: SubmitHandler<LoginUser> = (data) => {
     mutate(data);
-    console.warn(data.email);
   };
   return (
     <>
@@ -78,7 +90,7 @@ const LoginForm = () => {
             </button>
             <div className="my-4 flex justify-center">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-lilac md:h-20 md:w-20">
-                <img className="h-10 w-16" src="photomania1.png" alt="logo" />
+                <img className="h-10 w-16" src="/public/photomania1.png" alt="logo" />
               </div>
             </div>
             <div className="flex justify-center">
@@ -104,7 +116,7 @@ const LoginForm = () => {
                     placeholder="name@company.com"
                     {...register('email')}
                   />
-                  {errors.email && <span className="text-red-900">{errors.email.message}</span>}
+                  {errors.email && <span className="text-red-700">{errors.email.message}</span>}
                 </div>
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
@@ -118,7 +130,7 @@ const LoginForm = () => {
                     {...register('password')}
                   />
                   {errors.password && (
-                    <span className="text-red-900">{errors.password.message}</span>
+                    <span className="text-red-700">{errors.password.message}</span>
                   )}
                 </div>
 

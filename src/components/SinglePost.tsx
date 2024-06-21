@@ -67,6 +67,7 @@ const SinglePost = () => {
   const handleEdit = () => {
     navigate(`/post/edit/${post.postId}`, {
       state: {
+        sentFrom: '/post/view',
         postId: post.postId,
         image: post.postImg,
         caption: post.postCaption,
@@ -88,42 +89,41 @@ const SinglePost = () => {
     <div>
       <div className="flex h-screen items-center justify-center">
         <div className="relative flex max-h-[90vh] w-4/5 flex-row rounded-lg p-4 shadow-lg">
-          <div className="absolute right-2 top-0">
-            {decoded && decoded.userId === user.id ? (
-              <div className="hover:cursor-pointer" onClick={() => handleDropdown()}>
-                <Ellipsis />
-              </div>
-            ) : (
-              ''
-            )}
-            {dropdown && (
-              <div className="absolute right-0 mr-2 mt-2 w-36 rounded-lg border border-gray-200 bg-white shadow-lg">
-                <button
-                  className="w-full px-4 py-2 text-left hover:bg-gray-200"
-                  onClick={handleEdit}>
-                  Edit
-                </button>
-                <button
-                  className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-200"
-                  onClick={handleDelete}>
-                  Delete
-                </button>
-              </div>
-            )}
-          </div>
-
           <div
-            className={`flex w-1/2 flex-1 items-center justify-center overflow-hidden border-2 border-lightGray ${
+            className={`flex w-1/2 flex-1 items-center justify-center overflow-hidden rounded-lg ${
               isLandscape ? 'max-h-[70vh]' : 'max-h-full'
             }`}>
             <img
-              className={`rounded-lg object-contain ${isLandscape ? 'max-h-[70vh]' : 'max-h-full'}`}
+              className={`rounded-lg object-cover ${isLandscape ? 'max-h-[70vh]' : 'max-h-full'}`}
               src={`http://localhost:5000/${data.postData.postImg.replace('public\\images\\', 'images/')}`}
               alt=""
             />
           </div>
 
-          <div className="mx-4 mt-4 flex w-1/2 flex-col overflow-auto rounded-lg">
+          <div className="mx-0 mt-4 flex w-1/2 flex-col overflow-auto rounded-lg">
+            <div className="absolute right-6 top-2">
+              {decoded && decoded.userId === user.id ? (
+                <div className="hover:cursor-pointer" onClick={() => handleDropdown()}>
+                  <Ellipsis />
+                </div>
+              ) : (
+                ''
+              )}
+              {dropdown && (
+                <div className="absolute right-0 mr-2 mt-2 w-36 rounded-lg border border-gray-200 bg-white shadow-lg">
+                  <button
+                    className="w-full px-4 py-2 text-left hover:bg-gray-200"
+                    onClick={handleEdit}>
+                    Edit
+                  </button>
+                  <button
+                    className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-200"
+                    onClick={handleDelete}>
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
             <div className="flex items-center border-b p-4">
               <button onClick={handleProfileClick} className="mr-4">
                 {user.userImg ? (
@@ -151,7 +151,7 @@ const SinglePost = () => {
             </div>
             <div className="p-4">
               <div className="mb-2 text-lg font-extrabold">{post.postCaption}</div>
-              <div className="text-md text-gray-500">{post.postCaption}</div>
+              <div className="text-md text-gray-500">{post.postDesc}</div>
             </div>
           </div>
         </div>

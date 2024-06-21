@@ -48,14 +48,15 @@ const CreatePost = () => {
       }
     },
     onSuccess: () => {
-      console.warn('Post added');
-      navigate('/');
+      navigate('/profile/me');
 
       toast.success('Post added successfully');
-      console.warn(toast);
     },
-    onError: () => {
-      toast.error('An error occurred');
+    onError: (error) => {
+      error.message.includes('jwt malformed');
+      const errorMessage = 'You are not authorized!';
+
+      toast.error(`An error occurred. ${errorMessage}`);
     }
   });
 
@@ -65,7 +66,7 @@ const CreatePost = () => {
 
   const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    console.warn('selected file', selectedFile);
+
     if (selectedFile) {
       setFile(selectedFile);
       setValue('image', selectedFile);
@@ -79,15 +80,19 @@ const CreatePost = () => {
   };
 
   return (
-    <>
-      <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(submitData)}>
-        <div className="fixed left-0 right-0 m-auto grid h-screen grid-cols-2 gap-0">
-          {/* First Column */}
-          <div className="col-span-1 flex h-full items-center justify-center">
+    <div>
+      <h1 className="my-6 text-center text-xl font-bold leading-tight tracking-tight text-purple md:text-2xl">
+        Create Post
+      </h1>
+      <form className="" onSubmit={handleSubmit(submitData)}>
+        <div className="m-auto grid h-screen grid-cols-2 gap-0">
+          <div className="col-span-1 flex">
             <label
               className={`${
-                imagePreview ? 'h-auto' : 'h-screen'
-              } dark:hover:bg-bray-800 mx-10 my-8 flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600`}>
+                imagePreview
+                  ? 'mx-10 flex h-[70%] w-full flex-col items-center'
+                  : 'mx-10 flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 lg:h-[70%]'
+              } `}>
               <input
                 id="dropzone-file"
                 type="file"
@@ -99,7 +104,7 @@ const CreatePost = () => {
                 <img
                   src={imagePreview}
                   alt="Image Preview"
-                  className="h-auto w-full rounded-lg object-cover"
+                  className="w-full overflow-hidden rounded-lg object-cover"
                 />
               ) : (
                 <div className="flex flex-col items-center justify-center pb-6 pt-5">
@@ -110,30 +115,24 @@ const CreatePost = () => {
                   <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG</p>
                 </div>
               )}
-              {errors.image && <p>{errors.image.message}</p>}
+              {errors.image && <p className="text-red-700">{errors.image.message}</p>}
             </label>
           </div>
-
-          {/* Second Column */}
+          {/* Second */}
           <div className="col-span-1 h-full">
-            <div className="flex h-full flex-col items-center justify-center px-6 py-8">
-              <h1 className="mb-20 text-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                Create Post
-              </h1>
+            <div className="flex h-full flex-col items-center justify-center px-6">
               <div className="w-full flex-1">
-                <div className="space-y-4 p-6 sm:p-8 md:space-y-6">
+                <div className="space-y-2 md:space-y-4">
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                      Caption
-                    </label>
+                    <label className="mb-2 block text-sm font-medium text-gray-900">Caption</label>
                     <input
                       type="text"
                       id="text"
                       placeholder="Your caption"
-                      className="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                      className="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 sm:text-sm"
                       {...register('caption')}
                     />
-                    {errors.caption && <p>{errors.caption.message}</p>}
+                    {errors.caption && <p className="text-red-700">{errors.caption.message}</p>}
                   </div>
                   <div>
                     <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
@@ -145,7 +144,9 @@ const CreatePost = () => {
                       placeholder="Description"
                       className="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                       {...register('description')}></textarea>
-                    {errors.description && <p>{errors.description.message}</p>}
+                    {errors.description && (
+                      <p className="text-red-700">{errors.description.message}</p>
+                    )}
                   </div>
 
                   <button
@@ -159,7 +160,7 @@ const CreatePost = () => {
           </div>
         </div>
       </form>
-    </>
+    </div>
   );
 };
 

@@ -34,9 +34,10 @@ const Header = () => {
 
   const onLogoutClick = async () => {
     setLogin(false);
-
+    // LogOut();
     document.cookie = 'token=; expires=Thu, 01 Jan 2000 00:00:00 UTC; path=/;';
     sessionStorage.removeItem('token');
+    navigate('/');
   };
 
   const onSignupClick = () => {
@@ -46,7 +47,7 @@ const Header = () => {
   return (
     <div>
       <div className="flex h-20 flex-wrap items-center justify-between bg-lilac p-3 sm:px-2 sm:py-1">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 pl-10">
           <NavLink to="/">
             <button
               type="button"
@@ -65,12 +66,12 @@ const Header = () => {
         </div>
 
         {login ? (
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 pr-10">
             <NavLink to="/profile/me">
               <button
                 type="button"
                 name="button"
-                className={`rounded-full px-4 py-3 font-semibold text-dark hover:bg-light`}>
+                className={`rounded-full px-4 py-3 font-semibold text-dark hover:bg-light ${location.pathname === '/profile/me' ? 'bg-purple text-light hover:text-dark' : ''}`}>
                 Profile
               </button>
             </NavLink>
@@ -83,7 +84,7 @@ const Header = () => {
             </button>
           </div>
         ) : (
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 pr-10">
             <button
               type="button"
               name="button"
